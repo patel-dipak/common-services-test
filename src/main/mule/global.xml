@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd">
+	
+	<global-property doc:name="Global Property" doc:id="c7037bd6-c8a6-413c-8d77-4f37efd6cd8d" name="mule.env" value="local" />
+	<configuration-properties doc:name="Common Configuration properties" doc:id="6038be01-42f4-4b20-8fa3-ab550daa8efb" file="common-config.yaml" />
+	<configuration-properties doc:name="Configuration properties" doc:id="82c2cad3-6605-44bc-be46-98e1daab90b7" file="${mule.env}-config.yaml" />
+
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="4f354feb-7ae2-499b-ac8d-742aef6d1140" >
+		<http:listener-connection host="${http.host}" port="${http.port}" />
+	</http:listener-config>
+	<http:request-config name="common-notification-request_configuration" doc:name="HTTP Request configuration" doc:id="1ccd0a00-6191-48fa-b4a4-3bcc5bb418b9" basePath="${common-notification-api.base-path}">
+		<http:request-connection protocol="HTTPS" host="${common-notification-api.host}" port="${common-notification-api.port}"/>
+	</http:request-config>
+
+
+</mule>

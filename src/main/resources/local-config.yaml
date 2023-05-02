@@ -1,0 +1,9 @@
+
+common-notification-api:
+  host: "common-notification-api.us-e1.cloudhub.io"
+  port: "443"
+  base-path: "/api"
+  client-id: ""
+  client-secret: ""
+  slack-path: "/slack"
+  

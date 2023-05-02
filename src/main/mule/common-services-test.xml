@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+
+	<flow name="slack-notification-test-flow" doc:id="5be71555-86f5-47e4-82ca-5e236662c673" >
+		<http:listener doc:name="Listener" doc:id="d0f9d1a0-0b12-4b2a-8314-e443070816ad" config-ref="HTTP_Listener_config" path="/notification/slack/test"/>
+		<ee:transform doc:name="DW: Transform Headers" doc:id="78499b06-1bde-4b13-a866-ef7d3f567f06">
+			<ee:message />
+			<ee:variables>
+				<ee:set-variable variableName="vhttpHeaders"><![CDATA[%dw 2.0
+output application/json
+---
+{
+    "sourceSystem" : attributes.Headers.'source-system' default 'Not Available',
+    "targetSystem" : attributes.Headers.'target-system' default 'Not Available',
+    "correlationId" : attributes.Headers.'correlation-id' default uuid()
+}]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<logger level="INFO" doc:name="Log Payload" doc:id="1b9f5511-13f8-4211-8ad0-471993b23230" message="#[payload]"/>
+		<http:request method="POST" doc:name="commopn-notification-api" doc:id="1f414308-7a60-4fae-a177-900d8bb4dbcd" config-ref="common-notification-request_configuration" path="${common-notification-api.slack-path}">
+			<http:headers ><![CDATA[#[output application/java
+---
+{
+	"target-system" : vars.vhttpHeaders.sourceSystem,
+	"source-system" : vars.vhttpHeaders.targetSystem,
+	"correlation-id" : vars.vhttpHeaders.correlationId
+}]]]></http:headers>
+		</http:request>
+		<logger level="INFO" doc:name="Log Response" doc:id="028b5ef2-74e6-4310-b63b-d12c15a9a15e" message="#[payload]" />
+		<error-handler >
+			<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="0e9931b2-48b2-42e1-b666-47026fc90c35" >
+				<logger level="INFO" doc:name="Log Error" doc:id="3b01f79f-622c-4ed7-a396-a30ba9123e68" message="#[error.detailedDescription]"/>
+			</on-error-continue>
+		</error-handler>
+	</flow>
+	
+</mule>
