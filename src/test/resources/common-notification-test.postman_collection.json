@@ -1,0 +1,40 @@
+{
+	"info": {
+		"_postman_id": "fec01493-1c17-40dc-8714-c1a9fa5fe246",
+		"name": "common-notification-test",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "1221805"
+	},
+	"item": [
+		{
+			"name": "test-slack-api",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"noticeType\": \"SlackNotice\",\r\n    \"channel\": \"error-notification\",\r\n    \"message\": \"Support hours have been increased to 24x7x365\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8081/notification/slack/test",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"notification",
+						"slack",
+						"test"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
